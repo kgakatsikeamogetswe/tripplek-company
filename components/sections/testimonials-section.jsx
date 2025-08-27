@@ -3,21 +3,21 @@ import { Star } from 'lucide-react'
 
 const testimonials = [
   {
-    name: "Sarah Johnson",
+    name: "Oscar Kekena",
     role: "Homeowner",
     content:
       "Triple K transformed our home's electrical system. Professional, reliable, and the smart home integration is amazing!",
     rating: 5,
   },
   {
-    name: "Mike Chen",
+    name: "Oscar Kekana",
     role: "Business Owner",
     content:
       "Outstanding network setup for our office. Fast, secure, and they explained everything clearly. Highly recommended!",
     rating: 5,
   },
   {
-    name: "Lisa Rodriguez",
+    name: "Oscar Kekana",
     role: "Property Manager",
     content:
       "Emergency service was incredible. They responded within an hour and fixed our power issue quickly and professionally.",
