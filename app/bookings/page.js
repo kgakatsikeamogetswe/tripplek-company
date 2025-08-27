@@ -1,7 +1,7 @@
 import React from 'react'
 
-export const booking = () => {
+export default function Booking() {
   return (
-    <div>booking</div>
+    <div>Booking</div>
   )
 }
