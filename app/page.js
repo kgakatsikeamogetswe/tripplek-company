@@ -1,10 +1,19 @@
-import React from 'react'
-import { Navbar } from '../components/Navbar'
+import { Navigation } from "../components/layout/Navigation"
+import { Footer } from "../components/layout/Footer"
+import { HeroSection } from "../components/sections/hero-section"
+import { ServicesSection } from "../components/sections/service-section"
+import { TestimonialsSection } from "../components/sections/testimonials-section"
+import { CTASection } from "../components/sections/cta-section"
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navigation />
+      <HeroSection />
+      <ServicesSection />
+      <TestimonialsSection />
+      <CTASection />
+      <Footer />
     </div>
   )
 }
