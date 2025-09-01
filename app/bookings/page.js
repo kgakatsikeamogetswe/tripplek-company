@@ -1,7 +1,10 @@
 import React from 'react'
+import { Navigation } from '../../components/layout/Navigation'
 
 export default function Booking() {
   return (
-    <div>Booking</div>
+    <div>
+      <Navigation/>
+    </div>
   )
 }

@@ -61,7 +61,7 @@ export function HeroSection() {
                 height={100}
                 className="rounded-lg shadow-2xl animate-float"
               />
-              <div className="absolute -top-4 -right-4 bg-accent text-accent-foreground p-4 rounded-lg shadow-lg animate-pulse-glow">
+              <div className="absolute -top-4 ml-88 bg-accent text-accent-foreground p-4 rounded-lg shadow-lg animate-pulse-glow">
                 <Zap className="h-8 w-8" />
               </div>
               <div className="absolute -bottom-4 -left-4 bg-primary text-primary-foreground p-4 rounded-lg shadow-lg animate-pulse-glow">
