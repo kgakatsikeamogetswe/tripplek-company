@@ -4,6 +4,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export function Navigation() {
   const pathname = usePathname()
@@ -50,9 +51,9 @@ export function Navigation() {
             <Link href="/#contact" className="text-foreground hover:text-accent transition-colors">
               Contact
             </Link>
-            <button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground animate-pulse-glow">
+            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground animate-pulse-glow">
               <Link href="/booking">Book Now</Link>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

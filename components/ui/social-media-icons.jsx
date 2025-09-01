@@ -1,4 +1,5 @@
 import { Facebook, Linkedin, Instagram, Twitter } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export function SocialMediaIcons({ className = "", size = "md", variant = "outline" }) {
   const sizeClasses = {
@@ -43,7 +44,7 @@ export function SocialMediaIcons({ className = "", size = "md", variant = "outli
   return (
     <div className={`flex space-x-3 ${className}`}>
       {socialLinks.map((social) => (
-        <button
+        <Button
           key={social.name}
           size="sm"
           variant={variant}
@@ -53,7 +54,7 @@ export function SocialMediaIcons({ className = "", size = "md", variant = "outli
           <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`Follow us on ${social.name}`}>
             <social.icon className={iconSizes[size]} />
           </a>
-        </button>
+        </Button>
       ))}
     </div>
   )

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export function CTASection({
   title = "Ready to Power Your Project?",
@@ -15,14 +16,14 @@ export function CTASection({
           {description}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
+          <Button
             asChild
             size="lg"
             variant="secondary"
             className="bg-accent hover:bg-accent/90 text-accent-foreground"
           >
             <Link href={primaryButtonHref}>{primaryButtonText}</Link>
-          </button>
+          </Button>
           <button
             size="lg"
             variant="outline"
