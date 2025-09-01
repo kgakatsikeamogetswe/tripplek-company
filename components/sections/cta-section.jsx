@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "../ui/Button"
+import { Button } from "@/components/ui/button"
 
 export function CTASection({
   title = "Ready to Power Your Project?",
@@ -9,7 +9,7 @@ export function CTASection({
   secondaryButtonText = "Call Now: (+27) 76-230-5583"
 }) {
   return (
-    <section id = "contact" className="py-16 px-4 bg-primary text-primary-foreground">
+    <section id = "contact" className="py-16 px-4 bg-primary-foreground text-primary">
       <div className="container mx-auto text-center">
         <h2 className="text-4xl font-bold mb-4">{title}</h2>
         <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
@@ -27,7 +27,7 @@ export function CTASection({
           <button
             size="lg"
             variant="outline"
-            className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
+            className="text-primary hover:bg-primary-foreground hover:text-primary bg-transparent"
           >
             {secondaryButtonText}
           </button>

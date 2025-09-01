@@ -4,7 +4,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Button } from "../ui/Button"
+import { Button } from "@/components/ui/button"
 
 export function Navigation() {
   const pathname = usePathname()
