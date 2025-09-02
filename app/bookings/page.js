@@ -1,285 +1,432 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, Clock, User, Check, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Calendar } from "@/components/ui/calendar"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import {
+  ArrowRight,
+  ArrowLeft,
+  CalendarIcon,
+  Clock,
+  CheckCircle,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react"
 import Link from "next/link"
+import { format } from "date-fns"
 import { Navigation } from "@/components/layout/Navigation"
 import { Footer } from "@/components/layout/Footer"
 
-
-const timeSlots = [
-  "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
-  "11:00 AM", "11:30 AM", "1:00 PM", "1:30 PM",
-  "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM",
-  "4:00 PM", "4:30 PM", "5:00 PM",
-]
-
-export default function BookingSystem() {
-  const [selectedDate, setSelectedDate] = useState(null)
+export default function BookingPage() {
+  const [currentStep, setCurrentStep] = useState(1)
+  const [selectedServices, setSelectedServices] = useState([])
+  const [selectedDate, setSelectedDate] = useState()
   const [selectedTime, setSelectedTime] = useState("")
-  const [appointments, setAppointments] = useState([])
-  const [bookingForm, setBookingForm] = useState({
+  const [isUrgent, setIsUrgent] = useState(false)
+  const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
     phone: "",
-    notes: "",
+    address: "",
+    message: "",
   })
-  const [isBooked, setIsBooked] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
 
-  // Generate calendar days for current month
-  const generateCalendarDays = () => {
-    const today = new Date()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
-    const firstDay = new Date(currentYear, currentMonth, 1)
-    const lastDay = new Date(currentYear, currentMonth + 1, 0)
-    const daysInMonth = lastDay.getDate()
-    const startingDayOfWeek = firstDay.getDay()
+  const totalSteps = 4
 
-    const days = []
-
-    // Empty cells before the first day
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null)
-    }
-
-    // Actual days
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(currentYear, currentMonth, day))
-    }
-
-    return days
-  }
-
-  const isDateDisabled = (date) => {
-    if (!date) return true
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    return date < today
-  }
-
-  const isTimeSlotBooked = (date, time) => {
-    if (!date) return false
-    const dateString = date.toISOString().split("T")[0]
-    return appointments.some((apt) => apt.date === dateString && apt.time === time)
-  }
-
-  const handleBooking = () => {
-    if (!selectedDate || !selectedTime || !bookingForm.name || !bookingForm.email) {
-      return
-    }
-
-    const newAppointment = {
-      id: Date.now().toString(),
-      date: selectedDate.toISOString().split("T")[0],
-      time: selectedTime,
-      ...bookingForm,
-    }
-
-    const existingAppointments = JSON.parse(localStorage.getItem("appointments") || "[]")
-    const updatedAppointments = [...existingAppointments, newAppointment]
-    localStorage.setItem("appointments", JSON.stringify(updatedAppointments))
-
-    setAppointments([...appointments, newAppointment])
-    setIsBooked(true)
-
-    // Reset after 3s
-    setTimeout(() => {
-      setIsBooked(false)
-      setSelectedDate(null)
-      setSelectedTime("")
-      setBookingForm({ name: "", email: "", phone: "", notes: "" })
-    }, 3000)
-  }
-
-  const calendarDays = generateCalendarDays()
-  const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December",
-  ]
-  const currentMonth = monthNames[new Date().getMonth()]
-  const currentYear = new Date().getFullYear()
-
-  if (isBooked) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="pt-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Booking Confirmed!</h2>
-            <p className="text-gray-600 mb-4">
-              Your appointment has been scheduled for {selectedDate?.toLocaleDateString()} at {selectedTime}
-            </p>
-            <p className="text-sm text-gray-500">You will receive a confirmation email shortly.</p>
-          </CardContent>
-        </Card>
-      </div>
+  const handleServiceToggle = (serviceId) => {
+    setSelectedServices((prev) =>
+      prev.includes(serviceId) ? prev.filter((id) => id !== serviceId) : [...prev, serviceId]
     )
   }
 
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleSubmit = async () => {
+    // 🔌 You’ll insert into Supabase here
+    // Example:
+    // await supabase.from("bookings").insert({
+    //   services: selectedServices,
+    //   date: selectedDate,
+    //   time: selectedTime,
+    //   urgent: isUrgent,
+    //   ...contactInfo
+    // })
+
+    setShowConfirmation(true)
+  }
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1:
+        return selectedServices.length > 0
+      case 2:
+        return selectedDate && (selectedTime || isUrgent)
+      case 3:
+        return contactInfo.name && contactInfo.email && contactInfo.phone
+      default:
+        return true
+    }
+  }
+
   return (
-    <div>
-    <Navigation/>
-    <div className="min-h-screen bg-white p-25">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Book Your Appointment</h1>
-              <p className="text-lg text-gray-600">Select a date and time that works best for you</p>
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <Navigation />
+
+      {/* Booking Form */}
+      <section className="pt-32 pb-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <Badge variant="secondary" className="mb-4">
+              Book Your Service
+            </Badge>
+            <h1 className="text-4xl lg:text-5xl font-bold text-primary mb-4">
+              Schedule Your Electrical & Networking Service
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Get professional electrical and networking services with our easy 4-step booking process.
+            </p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              {[1, 2, 3, 4].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
+                      step <= currentStep ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
+                  </div>
+                  {step < 4 && (
+                    <div
+                      className={`h-1 w-20 mx-2 transition-all duration-300 ${
+                        step < currentStep ? "bg-accent" : "bg-muted"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Select Services</span>
+              <span>Choose Date & Time</span>
+              <span>Contact Details</span>
+              <span>Confirmation</span>
             </div>
           </div>
-        </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Calendar Section */}
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                Select Date
-              </CardTitle>
-              <p className="text-sm text-gray-600">
-                {currentMonth} {currentYear}
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-2 mb-4">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                  <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
-                    {day}
+          {/* Step Content */}
+          <Card className="min-h-[500px]">
+            <CardContent className="p-8">
+              {/* Step 1: Service Selection */}
+              {currentStep === 1 && (
+                <div className="animate-slide-in-left">
+                  <CardHeader className="px-0 pt-0">
+                    <CardTitle className="text-2xl text-primary">Select Your Services</CardTitle>
+                    <p className="text-muted-foreground">Choose one or more services you need</p>
+                  </CardHeader>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* 🔌 Map real services from Supabase */}
                   </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-7 gap-2">
-                {calendarDays.map((date, index) => (
-                  <div key={index}>
-                    {date ? (
-                      <button
-                        onClick={() => !isDateDisabled(date) && setSelectedDate(date)}
-                        className={`calendar-day ${
-                          selectedDate?.toDateString() === date.toDateString() ? "selected" : ""
-                        } ${isDateDisabled(date) ? "disabled" : ""}`}
-                        disabled={isDateDisabled(date)}
-                      >
-                        {date.getDate()}
-                      </button>
-                    ) : (
-                      <div className="w-10 h-10" />
+                </div>
+              )}
+
+              {/* Step 2: Date & Time Selection */}
+              {currentStep === 2 && (
+                <div className="animate-slide-in-left">
+                  <CardHeader className="px-0 pt-0">
+                    <CardTitle className="text-2xl text-primary">Choose Date & Time</CardTitle>
+                    <p className="text-muted-foreground">Select your preferred appointment time</p>
+                  </CardHeader>
+
+                  <div className="space-y-6">
+                    {/* Emergency Toggle */}
+                    <Card className="border-destructive/20">
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            id="urgent"
+                            checked={isUrgent}
+                            onChange={(e) => setIsUrgent(e.target.checked)}
+                            className="w-4 h-4 text-destructive"
+                          />
+                          <Label htmlFor="urgent" className="text-destructive font-medium">
+                            Emergency Service (24/7 Available)
+                          </Label>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {!isUrgent && (
+                      <div className="grid md:grid-cols-2 gap-8">
+                        {/* Date Selection */}
+                        <div>
+                          <Label className="text-base font-medium text-primary mb-4 block">Select Date</Label>
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                            disabled={(date) => date < new Date() || date.getDay() === 0}
+                            className="rounded-md border"
+                          />
+                        </div>
+
+                        {/* Time Selection */}
+                        <div>
+                          <Label className="text-base font-medium text-primary mb-4 block">Select Time</Label>
+                          <div className="grid grid-cols-2 gap-3">
+                            {/* 🔌 Map available time slots from Supabase */}
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Step 3: Contact Information */}
+              {currentStep === 3 && (
+                <div className="animate-slide-in-left">
+                  <CardHeader className="px-0 pt-0">
+                    <CardTitle className="text-2xl text-primary">Contact Information</CardTitle>
+                    <p className="text-muted-foreground">Tell us how to reach you</p>
+                  </CardHeader>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input
+                          id="name"
+                          value={contactInfo.name}
+                          onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email Address *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={contactInfo.email}
+                          onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+                          placeholder="Enter your email"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={contactInfo.phone}
+                          onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="address">Service Address</Label>
+                        <Input
+                          id="address"
+                          value={contactInfo.address}
+                          onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+                          placeholder="Enter service location"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="message">Additional Details</Label>
+                        <Textarea
+                          id="message"
+                          value={contactInfo.message}
+                          onChange={(e) => setContactInfo({ ...contactInfo, message: e.target.value })}
+                          placeholder="Describe your needs..."
+                          rows={4}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Review & Confirmation */}
+              {currentStep === 4 && (
+                <div className="animate-slide-in-left">
+                  <CardHeader className="px-0 pt-0">
+                    <CardTitle className="text-2xl text-primary">Review Your Booking</CardTitle>
+                    <p className="text-muted-foreground">Please review your service request</p>
+                  </CardHeader>
+
+                  <div className="space-y-6">
+                    {/* Selected Services */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Selected Services</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        {/* 🔌 Render selected services from Supabase */}
+                      </CardContent>
+                    </Card>
+
+                    {/* Appointment Details */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Appointment Details</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="flex items-center space-x-3">
+                            <CalendarIcon className="h-5 w-5 text-accent" />
+                            <span>
+                              {isUrgent
+                                ? "Emergency Service - ASAP"
+                                : selectedDate
+                                ? format(selectedDate, "PPP")
+                                : "No date selected"}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <Clock className="h-5 w-5 text-accent" />
+                            <span>{isUrgent ? "24/7 Available" : selectedTime || "No time selected"}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Contact Information */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Contact Information</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="flex items-center space-x-3">
+                            <User className="h-5 w-5 text-accent" />
+                            <span>{contactInfo.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <Mail className="h-5 w-5 text-accent" />
+                            <span>{contactInfo.email}</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <Phone className="h-5 w-5 text-accent" />
+                            <span>{contactInfo.phone}</span>
+                          </div>
+                          {contactInfo.address && (
+                            <div className="flex items-center space-x-3">
+                              <MapPin className="h-5 w-5 text-accent" />
+                              <span>{contactInfo.address}</span>
+                            </div>
+                          )}
+                        </div>
+                        {contactInfo.message && (
+                          <div className="mt-4 p-3 bg-muted/30 rounded-lg">
+                            <p className="text-sm">{contactInfo.message}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* Time Slots and Booking Form */}
-          <div className="space-y-6">
-            {/* Time Slots */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Available Times
-                </CardTitle>
-                <p className="text-sm text-gray-600">
-                  {selectedDate ? selectedDate.toLocaleDateString() : "Please select a date first"}
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-3">
-                  {timeSlots.map((time) => {
-                    const isBookedSlot = isTimeSlotBooked(selectedDate, time)
-                    const isDisabled = !selectedDate || isBookedSlot
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+              className="flex items-center space-x-2 bg-transparent"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Previous</span>
+            </Button>
 
-                    return (
-                      <button
-                        key={time}
-                        onClick={() => !isDisabled && setSelectedTime(time)}
-                        className={`time-slot ${selectedTime === time ? "selected" : ""} ${
-                          isBookedSlot ? "booked" : ""
-                        }`}
-                        disabled={isDisabled}
-                      >
-                        {time}
-                        {isBookedSlot && <span className="block text-xs">Booked</span>}
-                      </button>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Booking Form */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  Your Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">Full Name *</Label>
-                    <Input
-                      id="name"
-                      value={bookingForm.name}
-                      onChange={(e) => setBookingForm({ ...bookingForm, name: e.target.value })}
-                      placeholder="Enter your name"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={bookingForm.phone}
-                      onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
-                      placeholder="(+27) 000-000-000"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={bookingForm.email}
-                    onChange={(e) => setBookingForm({ ...bookingForm, email: e.target.value })}
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="notes">Additional Notes</Label>
-                  <Textarea
-                    id="notes"
-                    value={bookingForm.notes}
-                    onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
-                    placeholder="Any special requests or information..."
-                    rows={3}
-                  />
-                </div>
-                <Button
-                  onClick={handleBooking}
-                  className="w-full"
-                  disabled={!selectedDate || !selectedTime || !bookingForm.name || !bookingForm.email}
-                >
-                  Book Appointment
-                </Button>
-              </CardContent>
-            </Card>
+            {currentStep < totalSteps ? (
+              <Button
+                onClick={handleNext}
+                disabled={!canProceed()}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground flex items-center space-x-2"
+              >
+                <span>Next</span>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={!canProceed()}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground flex items-center space-x-2"
+              >
+                <span>Submit Booking</span>
+                <CheckCircle className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
-      </div>
-    </div>
-    <Footer/>
+      </section>
+
+      {/* Confirmation Modal */}
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-accent" />
+            </div>
+            <DialogTitle className="text-center text-2xl">Booking Confirmed!</DialogTitle>
+            <DialogDescription className="text-center">
+              Thank you for choosing our services. We'll contact you shortly to confirm your appointment details.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-6">
+            <div className="text-center p-4 bg-muted/30 rounded-lg">
+              <p className="font-medium text-primary">Booking Reference</p>
+              <p className="text-2xl font-bold text-accent">
+                TK-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+              </p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Button
+                onClick={() => setShowConfirmation(false)}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+              >
+                Close
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/">Return to Home</Link>
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
