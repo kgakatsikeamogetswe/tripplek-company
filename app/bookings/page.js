@@ -1,14 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Calendar } from "@/components/ui/calendar"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   ArrowRight,
   ArrowLeft,
@@ -19,46 +25,48 @@ import {
   Mail,
   Phone,
   MapPin,
-} from "lucide-react"
-import Link from "next/link"
-import { format } from "date-fns"
-import { Navigation } from "@/components/layout/Navigation"
-import { Footer } from "@/components/layout/Footer"
+} from "lucide-react";
+import Link from "next/link";
+import { format } from "date-fns";
+import { Navigation } from "@/components/layout/navigation";
+import { Footer } from "@/components/layout/footer";
 
 export default function BookingPage() {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedServices, setSelectedServices] = useState([])
-  const [selectedDate, setSelectedDate] = useState()
-  const [selectedTime, setSelectedTime] = useState("")
-  const [isUrgent, setIsUrgent] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedDate, setSelectedDate] = useState();
+  const [selectedTime, setSelectedTime] = useState("");
+  const [isUrgent, setIsUrgent] = useState(false);
   const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
     message: "",
-  })
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  });
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const totalSteps = 4
+  const totalSteps = 4;
 
   const handleServiceToggle = (serviceId) => {
     setSelectedServices((prev) =>
-      prev.includes(serviceId) ? prev.filter((id) => id !== serviceId) : [...prev, serviceId]
-    )
-  }
+      prev.includes(serviceId)
+        ? prev.filter((id) => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     }
-  }
+  };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     // 🔌 You’ll insert into Supabase here
@@ -71,21 +79,21 @@ export default function BookingPage() {
     //   ...contactInfo
     // })
 
-    setShowConfirmation(true)
-  }
+    setShowConfirmation(true);
+  };
 
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return selectedServices.length > 0
+        return selectedServices.length > 0;
       case 2:
-        return selectedDate && (selectedTime || isUrgent)
+        return selectedDate && (selectedTime || isUrgent);
       case 3:
-        return contactInfo.name && contactInfo.email && contactInfo.phone
+        return contactInfo.name && contactInfo.email && contactInfo.phone;
       default:
-        return true
+        return true;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -104,7 +112,8 @@ export default function BookingPage() {
               Schedule Your Electrical & Networking Service
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get professional electrical and networking services with our easy 4-step booking process.
+              Get professional electrical and networking services with our easy
+              4-step booking process.
             </p>
           </div>
 
@@ -115,10 +124,16 @@ export default function BookingPage() {
                 <div key={step} className="flex items-center">
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
-                      step <= currentStep ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                      step <= currentStep
+                        ? "bg-accent text-accent-foreground"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
+                    {step < currentStep ? (
+                      <CheckCircle className="h-5 w-5" />
+                    ) : (
+                      step
+                    )}
                   </div>
                   {step < 4 && (
                     <div
@@ -145,8 +160,12 @@ export default function BookingPage() {
               {currentStep === 1 && (
                 <div className="animate-slide-in-left">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl text-primary">Select Your Services</CardTitle>
-                    <p className="text-muted-foreground">Choose one or more services you need</p>
+                    <CardTitle className="text-2xl text-primary">
+                      Select Your Services
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Choose one or more services you need
+                    </p>
                   </CardHeader>
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* 🔌 Map real services from Supabase */}
@@ -158,8 +177,12 @@ export default function BookingPage() {
               {currentStep === 2 && (
                 <div className="animate-slide-in-left">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl text-primary">Choose Date & Time</CardTitle>
-                    <p className="text-muted-foreground">Select your preferred appointment time</p>
+                    <CardTitle className="text-2xl text-primary">
+                      Choose Date & Time
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Select your preferred appointment time
+                    </p>
                   </CardHeader>
 
                   <div className="space-y-6">
@@ -174,7 +197,10 @@ export default function BookingPage() {
                             onChange={(e) => setIsUrgent(e.target.checked)}
                             className="w-4 h-4 text-destructive"
                           />
-                          <Label htmlFor="urgent" className="text-destructive font-medium">
+                          <Label
+                            htmlFor="urgent"
+                            className="text-destructive font-medium"
+                          >
                             Emergency Service (24/7 Available)
                           </Label>
                         </div>
@@ -185,19 +211,25 @@ export default function BookingPage() {
                       <div className="grid md:grid-cols-2 gap-8">
                         {/* Date Selection */}
                         <div>
-                          <Label className="text-base font-medium text-primary mb-4 block">Select Date</Label>
+                          <Label className="text-base font-medium text-primary mb-4 block">
+                            Select Date
+                          </Label>
                           <Calendar
                             mode="single"
                             selected={selectedDate}
                             onSelect={setSelectedDate}
-                            disabled={(date) => date < new Date() || date.getDay() === 0}
+                            disabled={(date) =>
+                              date < new Date() || date.getDay() === 0
+                            }
                             className="rounded-md border"
                           />
                         </div>
 
                         {/* Time Selection */}
                         <div>
-                          <Label className="text-base font-medium text-primary mb-4 block">Select Time</Label>
+                          <Label className="text-base font-medium text-primary mb-4 block">
+                            Select Time
+                          </Label>
                           <div className="grid grid-cols-2 gap-3">
                             {/* 🔌 Map available time slots from Supabase */}
                           </div>
@@ -212,8 +244,12 @@ export default function BookingPage() {
               {currentStep === 3 && (
                 <div className="animate-slide-in-left">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl text-primary">Contact Information</CardTitle>
-                    <p className="text-muted-foreground">Tell us how to reach you</p>
+                    <CardTitle className="text-2xl text-primary">
+                      Contact Information
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Tell us how to reach you
+                    </p>
                   </CardHeader>
 
                   <div className="grid md:grid-cols-2 gap-6">
@@ -223,7 +259,12 @@ export default function BookingPage() {
                         <Input
                           id="name"
                           value={contactInfo.name}
-                          onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
+                          onChange={(e) =>
+                            setContactInfo({
+                              ...contactInfo,
+                              name: e.target.value,
+                            })
+                          }
                           placeholder="Enter your full name"
                         />
                       </div>
@@ -233,7 +274,12 @@ export default function BookingPage() {
                           id="email"
                           type="email"
                           value={contactInfo.email}
-                          onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+                          onChange={(e) =>
+                            setContactInfo({
+                              ...contactInfo,
+                              email: e.target.value,
+                            })
+                          }
                           placeholder="Enter your email"
                         />
                       </div>
@@ -243,7 +289,12 @@ export default function BookingPage() {
                           id="phone"
                           type="tel"
                           value={contactInfo.phone}
-                          onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                          onChange={(e) =>
+                            setContactInfo({
+                              ...contactInfo,
+                              phone: e.target.value,
+                            })
+                          }
                           placeholder="Enter your phone number"
                         />
                       </div>
@@ -254,7 +305,12 @@ export default function BookingPage() {
                         <Input
                           id="address"
                           value={contactInfo.address}
-                          onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+                          onChange={(e) =>
+                            setContactInfo({
+                              ...contactInfo,
+                              address: e.target.value,
+                            })
+                          }
                           placeholder="Enter service location"
                         />
                       </div>
@@ -263,7 +319,12 @@ export default function BookingPage() {
                         <Textarea
                           id="message"
                           value={contactInfo.message}
-                          onChange={(e) => setContactInfo({ ...contactInfo, message: e.target.value })}
+                          onChange={(e) =>
+                            setContactInfo({
+                              ...contactInfo,
+                              message: e.target.value,
+                            })
+                          }
                           placeholder="Describe your needs..."
                           rows={4}
                         />
@@ -277,15 +338,21 @@ export default function BookingPage() {
               {currentStep === 4 && (
                 <div className="animate-slide-in-left">
                   <CardHeader className="px-0 pt-0">
-                    <CardTitle className="text-2xl text-primary">Review Your Booking</CardTitle>
-                    <p className="text-muted-foreground">Please review your service request</p>
+                    <CardTitle className="text-2xl text-primary">
+                      Review Your Booking
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Please review your service request
+                    </p>
                   </CardHeader>
 
                   <div className="space-y-6">
                     {/* Selected Services */}
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Selected Services</CardTitle>
+                        <CardTitle className="text-lg">
+                          Selected Services
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         {/* 🔌 Render selected services from Supabase */}
@@ -295,7 +362,9 @@ export default function BookingPage() {
                     {/* Appointment Details */}
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Appointment Details</CardTitle>
+                        <CardTitle className="text-lg">
+                          Appointment Details
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="grid md:grid-cols-2 gap-4">
@@ -311,7 +380,11 @@ export default function BookingPage() {
                           </div>
                           <div className="flex items-center space-x-3">
                             <Clock className="h-5 w-5 text-accent" />
-                            <span>{isUrgent ? "24/7 Available" : selectedTime || "No time selected"}</span>
+                            <span>
+                              {isUrgent
+                                ? "24/7 Available"
+                                : selectedTime || "No time selected"}
+                            </span>
                           </div>
                         </div>
                       </CardContent>
@@ -320,7 +393,9 @@ export default function BookingPage() {
                     {/* Contact Information */}
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Contact Information</CardTitle>
+                        <CardTitle className="text-lg">
+                          Contact Information
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="grid md:grid-cols-2 gap-4">
@@ -398,9 +473,12 @@ export default function BookingPage() {
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-accent" />
             </div>
-            <DialogTitle className="text-center text-2xl">Booking Confirmed!</DialogTitle>
+            <DialogTitle className="text-center text-2xl">
+              Booking Confirmed!
+            </DialogTitle>
             <DialogDescription className="text-center">
-              Thank you for choosing our services. We'll contact you shortly to confirm your appointment details.
+              Thank you for choosing our services. We'll contact you shortly to
+              confirm your appointment details.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-6">
@@ -428,5 +506,5 @@ export default function BookingPage() {
       {/* Footer */}
       <Footer />
     </div>
-  )
+  );
 }
