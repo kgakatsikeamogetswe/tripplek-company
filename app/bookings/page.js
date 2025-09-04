@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button.jsx"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.jsx"
-import { Badge } from "@/components/ui/badge.jsx"
-import { Input } from "@/components/ui/input.jsx"
-import { Label } from "@/components/ui/label.jsx"
-import { Textarea } from "@/components/ui/textarea.jsx"
-import { Calendar } from "@/components/ui/calendar.jsx"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog.jsx"
+import { Button } from "../../components/ui/button.jsx"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card.jsx"
+import { Badge } from "../../components/ui/badge.jsx"
+import { Input } from "../../components/ui/input.jsx"
+import { Label } from "../../components/ui/label.jsx"
+import { Textarea } from "../../components/ui/textarea.jsx"
+import { Calendar } from "../../components/ui/calendar.jsx"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../components/ui/dialog.jsx"
 import {
   ArrowRight,
   ArrowLeft,
@@ -22,8 +22,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
-import { Navigation } from "@/components/layout/navigation.jsx"
-import { Footer } from "@/components/layout/footer.jsx"
+import { Navigation } from "../../components/layout/navigation.jsx"
+import { Footer } from "../../components/layout/footer.jsx"
 
 
 
