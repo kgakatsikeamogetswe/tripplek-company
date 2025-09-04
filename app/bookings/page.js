@@ -25,8 +25,6 @@ import { format } from "date-fns"
 import { Navigation } from "@/components/layout/navigation"
 import { Footer } from "@/components/layout/footer"
 
-
-
 export default function BookingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState([]);
