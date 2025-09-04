@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button.jsx"
 
 export function CTASection({
   title = "Ready to Power Your Project?",
