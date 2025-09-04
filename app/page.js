@@ -1,5 +1,5 @@
-import { Navigation } from "../../components/layout/navigation"
-import { Footer } from "../../components/layout/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { Footer } from "@/components/layout/footer"
 import { HeroSection } from "@/components/sections/hero-section";
 import { ServicesSection } from "@/components/sections/service-section";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";

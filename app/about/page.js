@@ -1,6 +1,6 @@
 import React from "react";
-import { Navigation } from "../../components/layout/navigation"
-import { Footer } from "../../components/layout/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { Footer } from "@/components/layout/footer"
 
 export default function About() {
   return (
